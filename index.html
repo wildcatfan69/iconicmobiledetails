@@ -28,6 +28,9 @@
             justify-content: center;
             background-color: #111;
             padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         nav a {
             color: #fff;
@@ -38,6 +41,12 @@
         }
         nav a:hover {
             text-decoration: underline;
+            color: #ffcc00;
+        }
+        nav a.active {
+            font-weight: bold;
+            text-decoration: underline;
+            color: #ffcc00;
         }
         section {
             display: none;
@@ -60,11 +69,46 @@
         section ul {
             margin-bottom: 2rem;
         }
+        .button {
+            display: inline-block;
+            background-color: #ffcc00;
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+        .button:hover {
+            background-color: #ffa500;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid #fff;
+        }
         footer {
             text-align: center;
             padding: 1rem;
             background-color: #000;
             color: #fff;
+        }
+        @media (max-width: 768px) {
+            nav a {
+                margin: 0 0.5rem;
+                font-size: 1rem;
+            }
+            section {
+                padding: 1.5rem;
+            }
+            header img {
+                width: 250px;
+            }
         }
     </style>
     <script>
@@ -82,6 +126,9 @@
                             section.classList.add('active');
                         }
                     });
+
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
                 });
             });
 
@@ -124,6 +171,7 @@
             </li>
         </ul>
         <p><strong>Veterans Discount:</strong> All veterans receive an instant 10% off their entire bill.</p>
+        <a href="#" class="button">Get a Free Quote</a>
     </section>
     <section id="about">
         <h3>About Us</h3>
@@ -144,6 +192,11 @@
     </section>
     <footer>
         <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
+        <p>Follow us: 
+            <a href="https://facebook.com" target="_blank">Facebook</a> | 
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+        </p>
+        <p>Contact: (555) 123-4567 | email@example.com</p>
     </footer>
 </body>
 </html>
