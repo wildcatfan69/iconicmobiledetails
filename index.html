@@ -48,8 +48,21 @@
             text-decoration: underline;
             color: #ffcc00;
         }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+        .half {
+            width: 48%;
+            background: #111;
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.1);
+        }
         section {
-            display: none;
             max-width: 900px;
             margin: 2rem auto;
             background: #111;
@@ -57,6 +70,7 @@
             border-radius: 8px;
             border: 2px solid #fff;
             box-shadow: 0 3px 6px rgba(255, 255, 255, 0.1);
+            display: none;
         }
         section.active {
             display: block;
@@ -79,59 +93,7 @@
         .button:hover {
             background-color: #ffa500;
         }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #000;
-            color: #fff;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        form input, form select, form button {
-            padding: 0.8rem;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        form button {
-            background-color: #ffcc00;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        form button:hover {
-            background-color: #ffa500;
-        }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const links = document.querySelectorAll('nav a');
-            const sections = document.querySelectorAll('section');
-
-            links.forEach(link => {
-                link.addEventListener('click', () => {
-                    const targetId = link.getAttribute('href').replace('#', '');
-
-                    sections.forEach(section => {
-                        section.classList.remove('active');
-                        if (section.id === targetId) {
-                            section.classList.add('active');
-                        }
-                    });
-
-                    links.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                });
-            });
-
-            if (sections.length > 0) {
-                sections[0].classList.add('active');
-            }
-        });
-    </script>
 </head>
 <body>
     <header>
@@ -139,49 +101,51 @@
     </header>
     <nav>
         <a href="#services">Services</a>
+        <a href="#booking">Booking</a>
         <a href="#about">About</a>
         <a href="#expectations">What to Expect</a>
         <a href="#reviews">Reviews</a>
-        <a href="#booking">Booking</a>
         <a href="#legal">Legal</a>
     </nav>
-    <section class="hero" id="services">
-        <h3>Our Services</h3>
-        <p><strong>Veterans, First Responders, and Students Discount:</strong> All mentioned receive an instant 10% off their entire bill.</p>
-        <a href="#booking" class="button">Schedule Your Cleaning Now</a>
+    <div class="container">
+        <section class="half" id="services">
+            <h3>Our Services</h3>
+            <ul>
+                <li><strong>Entry Wash - $100:</strong> Exterior wash, tire shine, and basic interior vacuum. <em>2 Hours.</em></li>
+                <li><strong>Medium Wash - $200:</strong> Entry Wash + interior shampoo and dashboard detailing. <em>4 Hours.</em></li>
+                <li><strong>Advanced Wash - $400:</strong> Medium Wash + clay bar treatment and paint sealant. <em>6 Hours.</em></li>
+                <li><strong>Showroom Wash - $1000:</strong> Advanced Wash + ceramic coating and engine bay cleaning. <em>8 Hours.</em></li>
+            </ul>
+            <p><strong>Veterans, First Responders, and Students:</strong> 10% discount.</p>
+        </section>
+        <section class="half" id="booking">
+            <h3>Book an Appointment</h3>
+            <form id="bookingForm">
+                <input type="text" id="name" name="name" placeholder="Full Name" required>
+                <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                <input type="text" id="car_details" name="car_details" placeholder="Car Make, Model, Year, Color" required>
+                <input type="date" id="date" name="date" required>
+                <input type="time" id="time" name="time" required>
+                <button type="submit">Submit Booking Request</button>
+            </form>
+        </section>
+    </div>
+    <section id="about" class="active">
+        <h3>About Us</h3>
+        <p>Engineering graduate turned car detailing expert. Passionate about preserving factory shine and providing top-tier service.</p>
     </section>
-    <section id="booking">
-        <h3>Book an Appointment</h3>
-        <form id="bookingForm">
-            <input type="text" id="name" name="name" placeholder="Full Name" required>
-            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
-            <input type="email" id="email" name="email" placeholder="Email Address" required>
-            <select id="service" name="service" required>
-                <option value="">Select a Service</option>
-                <option value="entry_wash">Entry Wash - $100</option>
-                <option value="medium_wash">Medium Wash - $200</option>
-                <option value="advanced_wash">Advanced Wash - $400</option>
-                <option value="showroom_wash">Showroom Wash - $1000</option>
-            </select>
-            <select id="dirt_level" name="dirt_level" required>
-                <option value="">How Dirty is Your Car?</option>
-                <option value="light">Light - Just Dust</option>
-                <option value="moderate">Moderate - Some Stains/Grime</option>
-                <option value="heavy">Heavy - Deep Stains, Pet Hair, Mud</option>
-            </select>
-            <input type="text" id="car_details" name="car_details" placeholder="Car Make, Model, Year, Color" required>
-            <input type="date" id="date" name="date" required>
-            <input type="time" id="time" name="time" required>
-            <label><input type="checkbox" id="home_required" name="home_required"> I do not need to be home, but keys will be accessible</label>
-            <button type="submit">Submit Booking Request</button>
-        </form>
+    <section id="expectations">
+        <h3>What to Expect</h3>
+        <p>Water supply access required, but we provide our own power source for efficiency.</p>
+    </section>
+    <section id="reviews">
+        <h3>Reviews</h3>
+        <p>We value customer feedback and strive for 5-star reviews to continuously improve our service.</p>
     </section>
     <section id="legal">
         <h3>Legal</h3>
-        <p>By scheduling a service with ICONIC MOBILE DETAILS, you acknowledge and accept that all services are provided "as is." ICONIC MOBILE DETAILS is not liable for any damage to vehicles during or after the service.</p>
-        <p>Payment Policy: 50% upfront, 50% upon completion. If extra time is required due to vehicle condition, an additional charge of $25 per 30 minutes will apply.</p>
-        <p>Photos will be taken for service completion proof, excluding license plate details.</p>
-        <p>We reserve the right to refuse service for high-risk or mechanically compromised vehicles.</p>
+        <p>By scheduling a service, you agree that all work is provided "as is" and assume all risks. Photos may be taken for proof of service, excluding license plates. We reserve the right to refuse service if a vehicle is deemed too high-risk.</p>
     </section>
     <footer>
         <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
