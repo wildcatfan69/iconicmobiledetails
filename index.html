@@ -48,21 +48,8 @@
             text-decoration: underline;
             color: #ffcc00;
         }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 2rem auto;
-        }
-        .half {
-            width: 48%;
-            background: #111;
-            padding: 2.5rem;
-            border-radius: 8px;
-            border: 2px solid #fff;
-            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.1);
-        }
         section {
+            display: none;
             max-width: 900px;
             margin: 2rem auto;
             background: #111;
@@ -70,7 +57,6 @@
             border-radius: 8px;
             border: 2px solid #fff;
             box-shadow: 0 3px 6px rgba(255, 255, 255, 0.1);
-            display: none;
         }
         section.active {
             display: block;
@@ -79,6 +65,9 @@
             margin-top: 0;
             font-size: 2rem;
             color: #fff;
+        }
+        section ul {
+            margin-bottom: 2rem;
         }
         .button {
             display: inline-block;
@@ -93,7 +82,62 @@
         .button:hover {
             background-color: #ffa500;
         }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid #fff;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #000;
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            nav a {
+                margin: 0 0.5rem;
+                font-size: 1rem;
+            }
+            section {
+                padding: 1.5rem;
+            }
+            header img {
+                width: 250px;
+            }
+        }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('section');
+
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetId = link.getAttribute('href').replace('#', '');
+
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        }
+                    });
+
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+
+            // Show the first section by default
+            if (sections.length > 0) {
+                sections[0].classList.add('active');
+            }
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -101,54 +145,57 @@
     </header>
     <nav>
         <a href="#services">Services</a>
-        <a href="#booking">Booking</a>
         <a href="#about">About</a>
         <a href="#expectations">What to Expect</a>
         <a href="#reviews">Reviews</a>
         <a href="#legal">Legal</a>
     </nav>
-    <div class="container">
-        <section class="half" id="services">
-            <h3>Our Services</h3>
-            <ul>
-                <li><strong>Entry Wash - $100:</strong> Exterior wash, tire shine, and basic interior vacuum. <em>2 Hours.</em></li>
-                <li><strong>Medium Wash - $200:</strong> Entry Wash + interior shampoo and dashboard detailing. <em>4 Hours.</em></li>
-                <li><strong>Advanced Wash - $400:</strong> Medium Wash + clay bar treatment and paint sealant. <em>6 Hours.</em></li>
-                <li><strong>Showroom Wash - $1000:</strong> Advanced Wash + ceramic coating and engine bay cleaning. <em>8 Hours.</em></li>
-            </ul>
-            <p><strong>Veterans, First Responders, and Students:</strong> 10% discount.</p>
-        </section>
-        <section class="half" id="booking">
-            <h3>Book an Appointment</h3>
-            <form id="bookingForm">
-                <input type="text" id="name" name="name" placeholder="Full Name" required>
-                <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
-                <input type="email" id="email" name="email" placeholder="Email Address" required>
-                <input type="text" id="car_details" name="car_details" placeholder="Car Make, Model, Year, Color" required>
-                <input type="date" id="date" name="date" required>
-                <input type="time" id="time" name="time" required>
-                <button type="submit">Submit Booking Request</button>
-            </form>
-        </section>
-    </div>
-    <section id="about" class="active">
+    <section class="hero" id="services">
+        <h3>Our Services</h3>
+        <ul>
+            <li>
+                <strong>Entry Wash - $100:</strong>
+                <p>Perfect for those seeking a quick yet professional clean. Includes exterior wash, tire shine, and basic interior vacuum. <em>Estimated Time: 2 Hours.</em></p>
+            </li>
+            <li>
+                <strong>Medium Wash - $200:</strong>
+                <p>Enjoy a more comprehensive clean with Entry Wash services plus interior shampoo and dashboard detailing. <em>Estimated Time: 4 Hours.</em></p>
+            </li>
+            <li>
+                <strong>Advanced Wash - $400:</strong>
+                <p>Experience premium detailing with Medium Wash services plus clay bar treatment and paint sealant for long-lasting shine. <em>Estimated Time: 6 Hours.</em></p>
+            </li>
+            <li>
+                <strong>Showroom Wash - $1000:</strong>
+                <p>The ultimate detailing package. Includes Advanced Wash services plus ceramic coating and engine bay cleaning. Your car will look like it just rolled off the showroom floor. <em>Estimated Time: 8 Hours.</em></p>
+            </li>
+        </ul>
+        <p><strong>Veterans, First Responders, and Students Discount:</strong> All mentioned receive an instant 10% off their entire bill.</p>
+        <a href="#" class="button">Get a Free Quote</a>
+    </section>
+    <section id="about">
         <h3>About Us</h3>
-        <p>Engineering graduate turned car detailing expert. Passionate about preserving factory shine and providing top-tier service.</p>
+        <p>I am an engineering graduate from the University of Kentucky who has always had an affinity for cars, particularly an obsession with how clean people could get their cars. I could not wait until the day I was 16 to get my first car and keep it clean. My hobby grew into a passion. Over the next 10 years, I researched the best products, practices, and techniques to preserve paint and restore the factory shine. My engineering background plays a role as well, studying the reactions and complements of different products and benchmarking their success to provide you, the customer, with the best all-around detailing process in Kentucky.</p>
     </section>
     <section id="expectations">
         <h3>What to Expect</h3>
-        <p>Water supply access required, but we provide our own power source for efficiency.</p>
+        <p> I will arrive at mutal agreed on location with all tools necessary to complete the job. I will require access to your water supply to perform the detailing services. Around 10 gallons of water will be used to complete the job this will result in around $0.03 of water usage. However, I will provide my own power source to ensure that all tools and equipment operate efficiently.</p>
     </section>
     <section id="reviews">
         <h3>Reviews</h3>
-        <p>We value customer feedback and strive for 5-star reviews to continuously improve our service.</p>
+        <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. They provide us with invaluable feedback and help future customers make informed decisions. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve. If you are not satisfied with your service, let us know! We want to continously improve the work we do to better serve Kentucky. </p>
     </section>
     <section id="legal">
         <h3>Legal</h3>
-        <p>By scheduling a service, you agree that all work is provided "as is" and assume all risks. Photos may be taken for proof of service, excluding license plates. We reserve the right to refuse service if a vehicle is deemed too high-risk.</p>
+        <p>By scheduling a service with ICONIC MOBILE DETAILS, you acknowledge and accept that all services are provided "as is." While we take the utmost care, ICONIC MOBILE DETAILS is not liable for any damage to vehicles during or after the service. The customer assumes all risks associated with the detailing process.</p>
+        <p>Payment Policy: 50% upfront, 50% upon completion. If the vehicle's condition requires additional time beyond the estimated duration, an extra charge of $25 per 30 minutes will be applied. Veterans, First Responders, and Students will receive a 10% discount off entire bill.</p>
     </section>
     <footer>
         <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
+        <p>Follow us: 
+            <a href="https://facebook.com" target="_blank">Facebook</a> | 
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+        </p>
         <p>Contact: (000) 000-0000 | email@example.com</p>
     </footer>
 </body>
