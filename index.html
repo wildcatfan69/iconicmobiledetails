@@ -66,9 +66,6 @@
             font-size: 2rem;
             color: #fff;
         }
-        section ul {
-            margin-bottom: 2rem;
-        }
         .button {
             display: inline-block;
             background-color: #ffcc00;
@@ -78,37 +75,21 @@
             font-weight: bold;
             border-radius: 5px;
             margin-top: 1rem;
+            cursor: pointer;
         }
         .button:hover {
             background-color: #ffa500;
         }
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+        .review-form {
+            display: none;
+            margin-top: 1rem;
         }
-        .gallery img {
-            width: 100%;
-            border-radius: 8px;
-            border: 2px solid #fff;
-        }
-        footer {
-            text-align: center;
+        .review {
+            background: #222;
             padding: 1rem;
-            background-color: #000;
-            color: #fff;
-        }
-        @media (max-width: 768px) {
-            nav a {
-                margin: 0 0.5rem;
-                font-size: 1rem;
-            }
-            section {
-                padding: 1.5rem;
-            }
-            header img {
-                width: 250px;
-            }
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px solid #fff;
         }
     </style>
     <script>
@@ -132,10 +113,26 @@
                 });
             });
 
-            // Show the first section by default
-            if (sections.length > 0) {
-                sections[0].classList.add('active');
-            }
+            document.getElementById('reviewButton').addEventListener('click', () => {
+                document.getElementById('reviewForm').style.display = 'block';
+            });
+
+            document.getElementById('submitReview').addEventListener('click', () => {
+                const name = document.getElementById('reviewName').value;
+                const reviewText = document.getElementById('reviewText').value;
+
+                if (name && reviewText) {
+                    const reviewSection = document.getElementById('reviewsList');
+                    const review = document.createElement('div');
+                    review.classList.add('review');
+                    review.innerHTML = `<strong>${name}</strong><p>${reviewText}</p>`;
+                    reviewSection.appendChild(review);
+
+                    document.getElementById('reviewName').value = '';
+                    document.getElementById('reviewText').value = '';
+                    document.getElementById('reviewForm').style.display = 'none';
+                }
+            });
         });
     </script>
 </head>
@@ -150,52 +147,19 @@
         <a href="#reviews">Reviews</a>
         <a href="#legal">Legal</a>
     </nav>
-    <section class="hero" id="services">
-        <h3>Our Services</h3>
-        <ul>
-            <li>
-                <strong>Entry Wash - $100:</strong>
-                <p>Perfect for those seeking a quick yet professional clean. Includes exterior wash, tire shine, and basic interior vacuum. <em>Estimated Time: 2 Hours.</em></p>
-            </li>
-            <li>
-                <strong>Medium Wash - $200:</strong>
-                <p>Enjoy a more comprehensive clean with Entry Wash services plus interior shampoo and dashboard detailing. <em>Estimated Time: 4 Hours.</em></p>
-            </li>
-            <li>
-                <strong>Advanced Wash - $400:</strong>
-                <p>Experience premium detailing with Medium Wash services plus clay bar treatment and paint sealant for long-lasting shine. <em>Estimated Time: 6 Hours.</em></p>
-            </li>
-            <li>
-                <strong>Showroom Wash - $1000:</strong>
-                <p>The ultimate detailing package. Includes Advanced Wash services plus ceramic coating and engine bay cleaning. Your car will look like it just rolled off the showroom floor. <em>Estimated Time: 8 Hours.</em></p>
-            </li>
-        </ul>
-        <p><strong>Veterans, First Responders, and Students Discount:</strong> All mentioned receive an instant 10% off their entire bill.</p>
-        <a href="#" class="button">CLICK HERE TO BOOK</a>
-    </section>
-    <section id="about">
-        <h3>About Us</h3>
-        <p>I am an engineering graduate from the University of Kentucky who has always had an affinity for cars, particularly an obsession with how clean people could get their cars. I could not wait until the day I was 16 to get my first car and keep it clean. My hobby grew into a passion. Over the next 10 years, I researched the best products, practices, and techniques to preserve paint and restore the factory shine. My engineering background plays a role as well, studying the reactions and complements of different products and benchmarking their success to provide you, the customer, with the best all-around detailing process in Kentucky.</p>
-    </section>
-    <section id="expectations">
-        <h3>What to Expect</h3>
-        <p> I will arrive at mutal agreed on location with all tools necessary to complete the job. I will require access to your water supply to perform the detailing services. Around 10 gallons of water will be used to complete the job this will result in around $0.03 of water usage. However, I will provide my own power source to ensure that all tools and equipment operate efficiently.</p>
-    </section>
-    <section id="reviews">
+    <section id="reviews" class="active">
         <h3>Reviews</h3>
-        <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. They provide us with invaluable feedback and help future customers make informed decisions. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve. If you are not satisfied with your service, let us know! We want to continously improve the work we do to better serve Kentucky. </p>
-    </section>
-    <section id="legal">
-        <h3>Legal</h3>
-        <p>By scheduling a service with ICONIC MOBILE DETAILS, you acknowledge and accept that all services are provided "as is." While we take the utmost care, ICONIC MOBILE DETAILS is not liable for any damage to vehicles during or after the service. The customer assumes all risks associated with the detailing process.</p>
-        <p>Payment Policy: 50% upfront, 50% upon completion. If the vehicle's condition requires additional time beyond the estimated duration, an extra charge of $25 per 30 minutes will be applied. Veterans, First Responders, and Students will receive a 10% discount off entire bill. If the service is canceled within 48 hours of the appointment, the 50% upfront charge will not be refunded however, no additional charges will be applied. Canceling booking outside of the 48 hour window will result in a full refund. </p>
+        <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve.</p>
+        <button id="reviewButton" class="button">Leave us a Review</button>
+        <div id="reviewForm" class="review-form">
+            <input type="text" id="reviewName" placeholder="Your Name" required>
+            <textarea id="reviewText" placeholder="Write your review here..." rows="4" required></textarea>
+            <button id="submitReview" class="button">Post Review</button>
+        </div>
+        <div id="reviewsList"></div>
     </section>
     <footer>
         <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
-        <p>Follow us: 
-            <a href="https://facebook.com" target="_blank">Facebook</a> | 
-            <a href="https://instagram.com" target="_blank">Instagram</a>
-        </p>
         <p>Contact: (000) 000-0000 | email@example.com</p>
     </footer>
 </body>
