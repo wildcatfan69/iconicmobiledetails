@@ -110,6 +110,23 @@
                 alert('Error submitting booking. Please try again.');
             }
         }
+        async function submitReview() {
+            const name = document.getElementById('reviewName').value;
+            const text = document.getElementById('reviewText').value;
+
+            const response = await fetch('https://iconicmobiledetails-backend.onrender.com/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, text })
+            });
+
+            if (response.ok) {
+                alert('Review submitted!');
+                document.getElementById('reviewForm').reset();
+            } else {
+                alert('Error submitting review. Please try again.');
+            }
+        }
     </script>
 </head>
 <body>
