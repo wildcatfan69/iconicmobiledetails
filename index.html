@@ -246,7 +246,7 @@
           });
 
           if (response.ok) {
-            alert("Booking submitted successfully! You and the admin will receive a confirmation via text and email shortly.");
+            alert("Booking submitted successfully! You will receive a confirmation via text and email shortly.");
             // Clear form fields
             document.getElementById('serviceType').value = '';
             document.getElementById('dirtyLevel').value = '';
@@ -292,11 +292,10 @@
     <div id="bookingForm" class="review-form">
       <select id="serviceType" required>
         <option value="" disabled selected>Select Your Service</option>
-        <option value="Mini Interior - $50">Mini Interior - $50</option>
-        <option value="Full Interior - $100">Full Interior - $100</option>
-        <option value="Mini Exterior - $50">Mini Exterior - $50</option>
-        <option value="Full Exterior - $100">Full Exterior - $100</option>
-        <option value="Full Detail - $150">Full Detail - $150</option>
+        <option value="Entry Wash - $100">Entry Wash - $100</option>
+        <option value="Medium Wash - $200">Medium Wash - $200</option>
+        <option value="Advanced Wash - $400">Advanced Wash - $400</option>
+        <option value="Showroom Wash - $1000">Showroom Wash - $1000</option>
       </select>
       <input type="text" id="dirtyLevel" placeholder="Dirty Level (e.g., Light, Moderate, Heavy)" required>
       <input type="text" id="vehicleColor" placeholder="Vehicle Color" required>
