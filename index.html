@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ICONIC MOBILE DETAILS - Mobile Car Detailing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ICONIC MOBILE DETAILS - Mobile Car Detailing Service</title>
   <style>
     body {
       font-family: 'Avenir Next LT Pro', Arial, sans-serif;
@@ -106,7 +106,7 @@
       color: #fff;
     }
     select:invalid {
-      color: #aaa; /* Gray text if the default placeholder option is selected */
+      color: #aaa;
     }
   </style>
   <script>
@@ -129,7 +129,7 @@
         });
       });
 
-      // Reviews functionality
+      /* ------------------------ REVIEWS FUNCTIONALITY ------------------------ */
       document.getElementById('reviewButton').addEventListener('click', () => {
         document.getElementById('reviewForm').style.display = 'block';
       });
@@ -166,65 +166,73 @@
       }
       loadReviews();
 
-      // Booking functionality
+      /* ------------------------ BOOKING FUNCTIONALITY ------------------------ */
       document.getElementById('bookingButton').addEventListener('click', () => {
         const bookingForm = document.getElementById('bookingForm');
         bookingForm.style.display = bookingForm.style.display === 'block' ? 'none' : 'block';
       });
 
       document.getElementById('submitBooking').addEventListener('click', async () => {
-        // Gather booking data
-        const serviceType = document.getElementById('serviceType').value;
-        const vehicleType = document.getElementById('vehicleType').value;
-        const dirtyLevel = document.getElementById('dirtyLevel').value;
-        const vehicleColor = document.getElementById('vehicleColor').value;
-        const make = document.getElementById('make').value;
-        const model = document.getElementById('model').value;
-        const location = document.getElementById('location').value;
-        const customerName = document.getElementById('customerName').value;
-        const phone = document.getElementById('phone').value;
-        const email = document.getElementById('email').value;
-        const cleaningDateValue = document.getElementById('cleaningDate').value;
-        const cleaningTime = document.getElementById('cleaningTime').value;
-        const comments = document.getElementById('comments').value;
+        // Gather booking data from the form
+        const serviceType   = document.getElementById('serviceType').value;
+        const vehicleType   = document.getElementById('vehicleType').value;
+        const dirtyLevel    = document.getElementById('dirtyLevel').value;
+        const vehicleColor  = document.getElementById('vehicleColor').value;
+        const make          = document.getElementById('make').value;
+        const model         = document.getElementById('model').value;
+        const location      = document.getElementById('location').value;
+        const customerName  = document.getElementById('customerName').value;
+        const phone         = document.getElementById('phone').value;
+        const email         = document.getElementById('email').value;
+        const cleaningDate  = document.getElementById('cleaningDate').value;
+        const cleaningTime  = document.getElementById('cleaningTime').value;
+        const comments      = document.getElementById('comments').value;
 
-        // Check that all required fields are filled
-        if (serviceType && vehicleType && dirtyLevel && vehicleColor && make && model && location &&
-            customerName && phone && email && cleaningDateValue && cleaningTime) {
-          const cleaningDate = new Date(cleaningDateValue);
+        // Ensure all required fields are filled
+        if (
+          serviceType && vehicleType && dirtyLevel && vehicleColor && make &&
+          model && location && customerName && phone && email &&
+          cleaningDate && cleaningTime
+        ) {
+          // Check if the booking date is at least 2 days in advance
+          const selectedDate = new Date(cleaningDate);
           const now = new Date();
           let lateNoticeFee = 0;
-          // Calculate the difference in days between the selected cleaning date and now
-          const diffTime = cleaningDate.getTime() - now.getTime();
-          const diffDays = diffTime / (1000 * 3600 * 24);
+          const diffDays = (selectedDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
           if (diffDays < 2) {
             lateNoticeFee = 50;
             alert("Note: Your booking is scheduled within 2 days. A late notice fee of $50 will be applied.");
           }
-          const bookingData = {
-            serviceType,
-            vehicleType,
-            dirtyLevel,
-            vehicleColor,
-            make,
-            model,
-            location,
-            customerName,
-            phone,
-            email,
-            cleaningDate: cleaningDateValue,
-            cleaningTime,
-            comments,
-            lateNoticeFee
+
+          // Combine the service and car details into one field
+          const carDetails = 
+            `Service: ${serviceType}\n` +
+            `Vehicle Type: ${vehicleType}\n` +
+            `Dirty Level: ${dirtyLevel}\n` +
+            `Color: ${vehicleColor}\n` +
+            `Make: ${make}\n` +
+            `Model: ${model}\n` +
+            `Location: ${location}\n` +
+            `Comments: ${comments}\n` +
+            `Late Notice Fee: $${lateNoticeFee}`;
+
+          // Create the payload in the format expected by your backend
+          const bookingPayload = {
+            name: customerName,
+            phone: phone,
+            email: email,
+            car_details: carDetails,
+            date: cleaningDate,
+            time: cleaningTime
           };
 
-          // Send booking data to the backend
-          const response = await fetch('https://iconicmobiledetails-backend.onrender.com/bookings', {
+          // Send booking data to the backend using the correct endpoint
+          const response = await fetch('https://iconicmobiledetails-backend.onrender.com/book', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bookingData)
+            body: JSON.stringify(bookingPayload)
           });
-          
+
           if (response.ok) {
             alert("Booking submitted successfully! You and the admin will receive a confirmation via text and email shortly.");
             // Clear form fields
@@ -256,6 +264,7 @@
   <header>
     <img src="logo.png" alt="ICONIC DETAILS Logo" />
   </header>
+
   <nav>
     <a href="#services" class="active">Services</a>
     <a href="#about">About</a>
@@ -263,10 +272,12 @@
     <a href="#reviews">Reviews</a>
     <a href="#legal">Legal</a>
   </nav>
+
   <!-- Services Section with Booking Functionality -->
   <section id="services" class="active">
     <h3>Our Services</h3>
-    <!-- Services details can be added here -->
+    <!-- Add details or images about your services here -->
+
     <button id="bookingButton" class="button">Book Now</button>
     <div id="bookingForm" class="review-form">
       <select id="serviceType" required>
@@ -276,9 +287,7 @@
         <option value="Mini Exterior - $50">Mini Exterior - $50</option>
         <option value="Full Exterior - $100">Full Exterior - $100</option>
         <option value="Full Detail - $150">Full Detail - $150</option>
-        <!-- Add or adjust these options as needed -->
       </select>
-
       <input type="text" id="vehicleType" placeholder="Vehicle Type (e.g., Sedan, SUV)" required />
       <input type="text" id="dirtyLevel" placeholder="Dirty Level (e.g., Light, Moderate, Heavy)" required />
       <input type="text" id="vehicleColor" placeholder="Vehicle Color" required />
@@ -307,6 +316,7 @@
     <div id="reviewsList"></div>
   </section>
 
-  <!-- Additional sections: About, What to Expect, Legal, etc. -->
+  <!-- Additional sections (About, What to Expect, Legal, etc.) can be added here -->
+
 </body>
 </html>
