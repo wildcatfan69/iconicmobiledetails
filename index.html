@@ -88,7 +88,9 @@
         }
     </style>
     <script>
-        async function submitBooking() {
+        async function submitBooking(event) {
+            event.preventDefault();
+            
             const name = document.getElementById('bookingName').value;
             const phone = document.getElementById('bookingPhone').value;
             const email = document.getElementById('bookingEmail').value;
@@ -97,34 +99,22 @@
             const time = document.getElementById('bookingTime').value;
             const location = document.getElementById('bookingLocation').value;
 
-            const response = await fetch('https://iconicmobiledetails-backend.onrender.com/bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, email, service, date, time, location })
-            });
-            
-            if (response.ok) {
+            try {
+                const response = await fetch('https://iconicmobiledetails-backend.onrender.com/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, email, service, date, time, location })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to submit booking');
+                }
+                
                 alert('Booking request submitted! You will receive confirmation shortly.');
                 document.getElementById('bookingForm').reset();
-            } else {
+            } catch (error) {
                 alert('Error submitting booking. Please try again.');
-            }
-        }
-        async function submitReview() {
-            const name = document.getElementById('reviewName').value;
-            const text = document.getElementById('reviewText').value;
-
-            const response = await fetch('https://iconicmobiledetails-backend.onrender.com/reviews', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, text })
-            });
-
-            if (response.ok) {
-                alert('Review submitted!');
-                document.getElementById('reviewForm').reset();
-            } else {
-                alert('Error submitting review. Please try again.');
+                console.error('Booking Error:', error);
             }
         }
     </script>
@@ -144,20 +134,10 @@
         <h3>Our Services</h3>
         <button class="button" onclick="document.getElementById('bookingSection').classList.add('active');">Book Now</button>
     </section>
-    <section id="reviews">
-        <h3>Customer Reviews</h3>
-        <div id="reviewsContainer"></div>
-        <div class="form-container">
-            <h4>Leave a Review</h4>
-            <input type="text" id="reviewName" placeholder="Your Name" required><br>
-            <textarea id="reviewText" placeholder="Your Review" required></textarea><br>
-            <button class="button" onclick="submitReview()">Submit Review</button>
-        </div>
-    </section>
     <section id="bookingSection">
         <h3>Book Your Detailing</h3>
         <div class="form-container">
-            <form id="bookingForm">
+            <form id="bookingForm" onsubmit="submitBooking(event)">
                 <input type="text" id="bookingName" placeholder="Your Name" required><br>
                 <input type="tel" id="bookingPhone" placeholder="Your Phone Number" required><br>
                 <input type="email" id="bookingEmail" placeholder="Your Email" required><br>
@@ -170,7 +150,7 @@
                 <input type="date" id="bookingDate" required><br>
                 <input type="time" id="bookingTime" required><br>
                 <input type="text" id="bookingLocation" placeholder="Meeting Location" required><br>
-                <button type="button" class="button" onclick="submitBooking()">Submit Booking</button>
+                <button type="submit" class="button">Submit Booking</button>
             </form>
         </div>
     </section>
