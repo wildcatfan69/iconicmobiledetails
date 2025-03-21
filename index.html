@@ -86,11 +86,17 @@
             border-radius: 8px;
             margin-top: 1rem;
         }
+        .review-list {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #222;
+            border-radius: 8px;
+        }
     </style>
     <script>
         async function submitBooking(event) {
             event.preventDefault();
-            
+
             const name = document.getElementById('bookingName').value;
             const phone = document.getElementById('bookingPhone').value;
             const email = document.getElementById('bookingEmail').value;
@@ -105,11 +111,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, phone, email, service, date, time, location })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to submit booking');
                 }
-                
+
                 alert('Booking request submitted! You will receive confirmation shortly.');
                 document.getElementById('bookingForm').reset();
             } catch (error) {
@@ -117,6 +123,31 @@
                 console.error('Booking Error:', error);
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('section');
+
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetId = link.getAttribute('href').replace('#', '');
+
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        }
+                    });
+
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+
+            if (sections.length > 0) {
+                sections[0].classList.add('active');
+            }
+        });
     </script>
 </head>
 <body>
@@ -130,7 +161,7 @@
         <a href="#reviews">Reviews</a>
         <a href="#legal">Legal</a>
     </nav>
-    <section id="services" class="active">
+    <section id="services">
         <h3>Our Services</h3>
         <button class="button" onclick="document.getElementById('bookingSection').classList.add('active');">Book Now</button>
     </section>
@@ -152,6 +183,13 @@
                 <input type="text" id="bookingLocation" placeholder="Meeting Location" required><br>
                 <button type="submit" class="button">Submit Booking</button>
             </form>
+        </div>
+    </section>
+    <section id="reviews">
+        <h3>Reviews</h3>
+        <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. They provide us with invaluable feedback and help future customers make informed decisions. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve. If you are not satisfied with your service, let us know! We want to continuously improve the work we do to better serve Kentucky.</p>
+        <div class="review-list">
+            <!-- Reviews will go here -->
         </div>
     </section>
 </body>
