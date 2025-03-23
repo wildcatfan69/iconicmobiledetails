@@ -136,8 +136,8 @@
   </style>
 
   <!-- Google Places API for address autocomplete -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrknObLQYnc8reQsfs6Y4sTqXtoT1I3hI&libraries=places" async defer></script>
-  
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrknObLQYnc8reQsfs6Y4sTqXtoT1I3hI&libraries=places"></script>
+
   <script>
     /* ---------------- GOOGLE PLACES AUTOCOMPLETE ---------------- */
     function initAutocomplete() {
@@ -415,6 +415,7 @@
       <input type="text" id="customerName" placeholder="Your Name" required />
       <input type="tel" id="phone" placeholder="Phone Number" required />
       <input type="email" id="email" placeholder="Email" required />
+      <!-- 30-min increments between 6am and 6pm -->
       <input type="date" id="cleaningDate" required />
       <input type="time" id="cleaningTime" required min="06:00" max="18:00" step="1800" />
       <textarea id="comments" placeholder="Any additional comments..." rows="4"></textarea>
