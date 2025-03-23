@@ -80,7 +80,7 @@
     .button:hover {
       background-color: #ffa500;
     }
-    .review-form {
+    .review-form, .booking-form {
       /* Center the form with symmetrical edges */
       display: none;
       background: #222;
@@ -91,8 +91,7 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .review,
-    .booking {
+    .review, .booking {
       background: #222;
       padding: 1rem;
       border-radius: 8px;
@@ -118,18 +117,32 @@
       filter: invert(80%) sepia(100%) saturate(200%) hue-rotate(10deg);
       cursor: pointer;
     }
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+      margin-top: 2rem;
+      border-top: 1px solid #fff;
+    }
+    footer a {
+      color: #ffcc00;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 
-  <!-- 1) Google Places API for location autocomplete -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrknObLQYnc8reQsfs6Y4sTqXtoT1I3hI&libraries=places"></script>
-
+  <!-- Google Places API for address autocomplete -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrknObLQYnc8reQsfs6Y4sTqXtoT1I3hI&libraries=places" async defer></script>
+  
   <script>
     /* ---------------- GOOGLE PLACES AUTOCOMPLETE ---------------- */
     function initAutocomplete() {
       const locationInput = document.getElementById('location');
       if (locationInput) {
         new google.maps.places.Autocomplete(locationInput, {
-          // 'address' or 'geocode' are typical usage
           types: ['geocode']
         });
       }
@@ -139,7 +152,6 @@
     async function populateVehicleYears() {
       const yearSelect = document.getElementById('vehicleYear');
       const currentYear = new Date().getFullYear();
-      // Populate years descending from current year to 1980
       for (let y = currentYear; y >= 1980; y--) {
         const option = document.createElement('option');
         option.value = y;
@@ -147,20 +159,13 @@
         yearSelect.appendChild(option);
       }
     }
-
     async function fetchMakesByYear(year) {
       const makeSelect = document.getElementById('vehicleMake');
       const modelSelect = document.getElementById('vehicleModel');
-
-      // Reset the makes and models each time a new year is selected
       makeSelect.innerHTML = '<option value="" disabled selected>Make</option>';
       modelSelect.innerHTML = '<option value="" disabled selected>Model</option>';
-
       if (!year) return;
-
-      // Example NHTSA endpoint for listing makes by year and vehicle type
       const url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?year=${year}&format=json`;
-
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -176,16 +181,11 @@
         console.error('Error fetching makes:', error);
       }
     }
-
     async function fetchModelsByYearMake(year, make) {
       const modelSelect = document.getElementById('vehicleModel');
       modelSelect.innerHTML = '<option value="" disabled selected>Model</option>';
-
       if (!year || !make) return;
-
-      // Example NHTSA endpoint for listing models by year and make
       const url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${make}/modelyear/${year}?format=json`;
-
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -203,10 +203,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      /* Initialize Google Places Autocomplete */
       initAutocomplete();
-
-      /* Initialize NHTSA year list and attach event listeners */
       populateVehicleYears();
       document.getElementById('vehicleYear').addEventListener('change', function() {
         fetchMakesByYear(this.value);
@@ -219,7 +216,6 @@
       /* ---------------- NAVIGATION TABS ---------------- */
       const links = document.querySelectorAll('nav a');
       const sections = document.querySelectorAll('section');
-
       links.forEach(link => {
         link.addEventListener('click', () => {
           const targetId = link.getAttribute('href').replace('#', '');
@@ -238,7 +234,6 @@
       document.getElementById('reviewButton').addEventListener('click', () => {
         document.getElementById('reviewForm').style.display = 'block';
       });
-
       document.getElementById('submitReview').addEventListener('click', async () => {
         const name = document.getElementById('reviewName').value;
         const reviewText = document.getElementById('reviewText').value;
@@ -256,7 +251,6 @@
           }
         }
       });
-
       async function loadReviews() {
         const response = await fetch('https://iconicmobiledetails-backend.onrender.com/reviews');
         const reviews = await response.json();
@@ -276,18 +270,13 @@
         const bookingForm = document.getElementById('bookingForm');
         bookingForm.style.display = bookingForm.style.display === 'block' ? 'none' : 'block';
       });
-
-      // Auto-close date/time picker after a selection
       document.getElementById('cleaningDate').addEventListener('change', function() {
         this.blur();
       });
-      // For the time input, using 'change' + step=1800 to ensure 30-min increments
       document.getElementById('cleaningTime').addEventListener('change', function() {
         this.blur();
       });
-
       document.getElementById('submitBooking').addEventListener('click', async () => {
-        // Gather booking data from the form
         const serviceType  = document.getElementById('serviceType').value;
         const dirtyLevel   = document.getElementById('dirtyLevel').value;
         const vehicleColor = document.getElementById('vehicleColor').value;
@@ -301,14 +290,11 @@
         const cleaningDate = document.getElementById('cleaningDate').value;
         const cleaningTime = document.getElementById('cleaningTime').value;
         const comments     = document.getElementById('comments').value;
-
-        // Basic validation for required fields
         if (
           serviceType && dirtyLevel && vehicleColor && vehicleYear &&
           vehicleMake && vehicleModel && location && customerName &&
           phone && email && cleaningDate && cleaningTime
         ) {
-          // Check if the booking date is at least 2 days in advance
           const selectedDate = new Date(cleaningDate);
           const now = new Date();
           let lateNoticeFee = 0;
@@ -317,8 +303,6 @@
             lateNoticeFee = 50;
             alert("Note: Your booking is scheduled within 2 days. A late notice fee of $50 will be applied.");
           }
-
-          // Combine the service and car details into one field
           const carDetails = 
             `Service: ${serviceType}\n` +
             `Dirty Level: ${dirtyLevel}\n` +
@@ -329,8 +313,6 @@
             `Location: ${location}\n` +
             `Comments: ${comments}\n` +
             `Late Notice Fee: $${lateNoticeFee}`;
-
-          // Create the payload in the format expected by your backend
           const bookingPayload = {
             name: customerName,
             phone: phone,
@@ -339,17 +321,13 @@
             date: cleaningDate,
             time: cleaningTime
           };
-
-          // Send booking data to your backend
           const response = await fetch('https://iconicmobiledetails-backend.onrender.com/book', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bookingPayload)
           });
-
           if (response.ok) {
             alert("Booking submitted successfully! You and the admin will receive a confirmation via text and email shortly.");
-            // Clear form fields
             document.getElementById('serviceType').value = '';
             document.getElementById('dirtyLevel').value = '';
             document.getElementById('vehicleColor').value = '';
@@ -374,12 +352,10 @@
     });
   </script>
 </head>
-<!-- Ensure initAutocomplete() is called on page load for Google Places -->
 <body onload="initAutocomplete()">
   <header>
     <img src="logo.png" alt="ICONIC DETAILS Logo" />
   </header>
-
   <nav>
     <a href="#services" class="active">Services</a>
     <a href="#about">About</a>
@@ -387,59 +363,80 @@
     <a href="#reviews">Reviews</a>
     <a href="#legal">Legal</a>
   </nav>
-
-  <!-- Services Section with Booking Functionality -->
+  
+  <!-- Services Section with Description and Booking -->
   <section id="services" class="active">
     <h3>Our Services</h3>
-    <!-- Add details or images about your services here -->
-    <button id="bookingButton" class="button">Book Now</button>
-
-    <div id="bookingForm" class="review-form">
+    <ul>
+      <li>
+        <strong>Entry Wash - $100:</strong>
+        <p>Perfect for those seeking a quick yet professional clean. Includes exterior wash, tire shine, and basic interior vacuum. <em>Estimated Time: 2 Hours.</em></p>
+      </li>
+      <li>
+        <strong>Medium Wash - $200:</strong>
+        <p>Enjoy a more comprehensive clean with Entry Wash services plus interior shampoo and dashboard detailing. <em>Estimated Time: 4 Hours.</em></p>
+      </li>
+      <li>
+        <strong>Advanced Wash - $400:</strong>
+        <p>Experience premium detailing with Medium Wash services plus clay bar treatment and paint sealant for long-lasting shine. <em>Estimated Time: 6 Hours.</em></p>
+      </li>
+      <li>
+        <strong>Showroom Wash - $1000:</strong>
+        <p>The ultimate detailing package. Includes Advanced Wash services plus ceramic coating and engine bay cleaning. Your car will look like it just rolled off the showroom floor. <em>Estimated Time: 8 Hours.</em></p>
+      </li>
+    </ul>
+    <p><strong>Veterans, First Responders, and Students Discount:</strong> All mentioned receive an instant 10% off their entire bill.</p>
+    <a href="#bookingForm" class="button" id="bookingButton">CLICK HERE TO BOOK</a>
+    
+    <!-- Booking Form -->
+    <div id="bookingForm" class="booking-form">
       <select id="serviceType" required>
         <option value="" disabled selected>Select Your Service</option>
-        <option value="Mini Interior - $50">Mini Interior - $50</option>
-        <option value="Full Interior - $100">Full Interior - $100</option>
-        <option value="Mini Exterior - $50">Mini Exterior - $50</option>
-        <option value="Full Exterior - $100">Full Exterior - $100</option>
-        <option value="Full Detail - $150">Full Detail - $150</option>
+        <option value="Entry Wash - $100">Entry Wash - $100</option>
+        <option value="Medium Wash - $200">Medium Wash - $200</option>
+        <option value="Advanced Wash - $400">Advanced Wash - $400</option>
+        <option value="Showroom Wash - $1000">Showroom Wash - $1000</option>
       </select>
-
       <input type="text" id="dirtyLevel" placeholder="Dirty Level (e.g., Light, Moderate, Heavy)" required />
       <input type="text" id="vehicleColor" placeholder="Vehicle Color" required />
-
-      <!-- NHTSA Year/Make/Model fields -->
+      <!-- NHTSA Year/Make/Model Fields -->
       <select id="vehicleYear" required>
         <option value="" disabled selected>Year</option>
-        <!-- Populated dynamically in JS -->
       </select>
       <select id="vehicleMake" required>
         <option value="" disabled selected>Make</option>
-        <!-- Populated dynamically in JS -->
       </select>
       <select id="vehicleModel" required>
         <option value="" disabled selected>Model</option>
-        <!-- Populated dynamically in JS -->
       </select>
-
-      <!-- Google Places Autocomplete -->
+      <!-- Google Places Autocomplete for Address -->
       <input type="text" id="location" placeholder="Location (Address)" required />
-
       <input type="text" id="customerName" placeholder="Your Name" required />
       <input type="tel" id="phone" placeholder="Phone Number" required />
       <input type="email" id="email" placeholder="Email" required />
-
-      <!-- 30-min increments between 6am and 6pm -->
       <input type="date" id="cleaningDate" required />
       <input type="time" id="cleaningTime" required min="06:00" max="18:00" step="1800" />
-
       <textarea id="comments" placeholder="Any additional comments..." rows="4"></textarea>
       <button id="submitBooking" class="button">Submit Booking</button>
     </div>
   </section>
-
+  
+  <!-- About Section -->
+  <section id="about">
+    <h3>About Us</h3>
+    <p>I am an engineering graduate from the University of Kentucky who has always had an affinity for cars, particularly an obsession with how clean people could get their cars. I could not wait until the day I was 16 to get my first car and keep it clean. My hobby grew into a passion. Over the next 10 years, I researched the best products, practices, and techniques to preserve paint and restore the factory shine. My engineering background plays a role as well, studying the reactions and complements of different products and benchmarking their success to provide you, the customer, with the best all-around detailing process in Kentucky.</p>
+  </section>
+  
+  <!-- What to Expect Section -->
+  <section id="expectations">
+    <h3>What to Expect</h3>
+    <p>I will arrive at a mutually agreed-upon location with all tools necessary to complete the job. I will require access to your water supply to perform the detailing services. Approximately 10 gallons of water will be used to complete the job, which results in around $0.03 of water usage. However, I will provide my own power source to ensure that all tools and equipment operate efficiently.</p>
+  </section>
+  
   <!-- Reviews Section -->
   <section id="reviews">
     <h3>Reviews</h3>
+    <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. They provide us with invaluable feedback and help future customers make informed decisions. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve. If you are not satisfied with your service, let us know! We want to continuously improve the work we do to better serve Kentucky.</p>
     <button id="reviewButton" class="button">Leave us a Review</button>
     <div id="reviewForm" class="review-form">
       <input type="text" id="reviewName" placeholder="Your Name" required />
@@ -448,8 +445,22 @@
     </div>
     <div id="reviewsList"></div>
   </section>
-
-  <!-- Additional sections (About, What to Expect, Legal, etc.) can be added here -->
-
+  
+  <!-- Legal Section -->
+  <section id="legal">
+    <h3>Legal</h3>
+    <p>By scheduling a service with ICONIC MOBILE DETAILS, you acknowledge and accept that all services are provided "as is." While we take the utmost care, ICONIC MOBILE DETAILS is not liable for any damage to vehicles during or after the service. The customer assumes all risks associated with the detailing process.</p>
+    <p>Payment Policy: 50% upfront, 50% upon completion. If the vehicle's condition requires additional time beyond the estimated duration, an extra charge of $25 per 30 minutes will be applied. Veterans, First Responders, and Students will receive a 10% discount off the entire bill. If the service is canceled within 48 hours of the appointment, the 50% upfront charge will not be refunded; however, no additional charges will be applied. Canceling a booking outside of the 48-hour window will result in a full refund.</p>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
+    <p>Follow us: 
+      <a href="https://facebook.com" target="_blank">Facebook</a> | 
+      <a href="https://instagram.com" target="_blank">Instagram</a>
+    </p>
+    <p>Contact: (000) 000-0000 | email@example.com</p>
+  </footer>
 </body>
 </html>
