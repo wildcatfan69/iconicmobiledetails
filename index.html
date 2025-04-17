@@ -27,7 +27,6 @@
     .car::before { content: "🏎️"; font-size:32px; display:block; }
     .progress-percentage { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; }
     .loading-text { text-align:center; margin-top:10px; font-size:14px; }
-    input, select, textarea { width:100%; padding:0.5rem; margin:0.5rem 0; border:1px solid #555; border-radius:4px; background:#333; color:#fff; }
     footer { background:#111; color:#fff; text-align:center; padding:1rem 0; border-top:1px solid #fff; }
     footer a { color:#ffcc00; text-decoration:none; }
     footer a:hover { text-decoration:underline; }
@@ -35,14 +34,75 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Tabs
-      const tabs=document.querySelectorAll('nav a'), secs=document.querySelectorAll('section');
-      tabs.forEach(t=>t.addEventListener('click',()=>{ const id=t.getAttribute('href').slice(1); secs.forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active'); }));
+      const tabs = document.querySelectorAll('nav a');
+      const secs = document.querySelectorAll('section');
+      tabs.forEach(tab => tab.addEventListener('click', () => {
+        const id = tab.getAttribute('href').substring(1);
+        secs.forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      }));
+
       // Reviews loading + functionality
-      const loadingContainer=document.getElementById('loadingContainer'), car=document.getElementById('car'), pct=document.getElementById('progressPercent'), txt=document.getElementById('loadingText');
-      function startAnimation(){ let prog=0; const iv=setInterval(()=>{ if(prog>=100){ clearInterval(iv); txt.innerText='Reviews loaded!'; return;} prog++; const ang=90+(prog/100)*360; car.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateX(75px) rotate(270deg)`; pct.innerText=prog+'%'; },50); }
-      async function loadReviews(){ loadingContainer.style.display='block'; document.getElementById('reviewsList').style.display='none'; startAnimation(); const res=await fetch('https://iconicmobiledetails-backend.onrender.com/reviews'); const data=await res.json(); const list=document.getElementById('reviewsList'); list.innerHTML=''; data.forEach(r=>{ const d=document.createElement('div'); d.className='review'; d.innerHTML=`<strong>${r.name}</strong><p>${r.review}</p>`; list.appendChild(d); }); loadingContainer.style.display='none'; list.style.display='block'; }
-      document.getElementById('reviewButton').addEventListener('click',()=>{ document.getElementById('reviewForm').style.display='block'; });
-      document.getElementById('submitReview').addEventListener('click',async()=>{ const n=document.getElementById('reviewName').value, r=document.getElementById('reviewText').value; if(n&&r){ await fetch('https://iconicmobiledetails-backend.onrender.com/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,review:r})}); document.getElementById('reviewName').value=''; document.getElementById('reviewText').value=''; document.getElementById('reviewForm').style.display='none'; setTimeout(loadReviews,200); }});
+      const loadingContainer = document.getElementById('loadingContainer');
+      const reviewsList = document.getElementById('reviewsList');
+      const car = document.getElementById('car');
+      const pct = document.getElementById('progressPercent');
+      const txt = document.getElementById('loadingText');
+
+      function startAnimation() {
+        let prog = 0;
+        const iv = setInterval(() => {
+          if (prog >= 100) {
+            clearInterval(iv);
+            txt.innerText = 'Reviews loaded!';
+            return;
+          }
+          prog++;
+          const ang = 90 + (prog / 100) * 360;
+          car.style.transform = `translate(-50%,-50%) rotate(${ang}deg) translateX(75px) rotate(270deg)`;
+          pct.innerText = prog + '%';
+        }, 50);
+      }
+
+      async function loadReviews() {
+        loadingContainer.style.display = 'block';
+        reviewsList.style.display = 'none';
+        startAnimation();
+        const res = await fetch('https://iconicmobiledetails-backend.onrender.com/reviews');
+        const data = await res.json();
+        reviewsList.innerHTML = '';
+        data.forEach(r => {
+          const div = document.createElement('div');
+          div.className = 'review';
+          div.innerHTML = `<strong>${r.name}</strong><p>${r.review}</p>`;
+          reviewsList.appendChild(div);
+        });
+        loadingContainer.style.display = 'none';
+        reviewsList.style.display = 'block';
+      }
+
+      document.getElementById('reviewButton').addEventListener('click', () => {
+        document.getElementById('reviewForm').style.display = 'block';
+      });
+
+      document.getElementById('submitReview').addEventListener('click', async () => {
+        const name = document.getElementById('reviewName').value;
+        const review = document.getElementById('reviewText').value;
+        if (name && review) {
+          await fetch('https://iconicmobiledetails-backend.onrender.com/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, review })
+          });
+          document.getElementById('reviewName').value = '';
+          document.getElementById('reviewText').value = '';
+          document.getElementById('reviewForm').style.display = 'none';
+          setTimeout(loadReviews, 200);
+        }
+      });
+
       loadReviews();
     });
   </script>
@@ -52,6 +112,7 @@
   <nav>
     <a href="#services" class="active">Services</a><a href="#about">About</a><a href="#expectations">What to Expect</a><a href="#reviews">Reviews</a><a href="#legal">Legal</a>
   </nav>
+
   <section id="services" class="active">
     <h3>Our Services</h3>
     <ul>
@@ -63,14 +124,17 @@
     <p><strong>Discount:</strong> Veterans, First Responders, and Students receive a 10% off their entire bill.</p>
     <a href="https://app.squareup.com/appointments/book/1dpgfzaf84gw17/L1PEGW0Z12MMA/start" class="square-button" target="_top" rel="nofollow">Click Here to Book</a>
   </section>
+
   <section id="about">
     <h3>About Us</h3>
     <p>I am an engineering graduate from the University of Kentucky who has always had an affinity for cars, particularly an obsession with how clean people could get their cars. I could not wait until the day I was 16 to get my first car and keep it clean. My hobby grew into a passion. Over the next 10 years, I researched the best products, practices, and techniques to preserve paint and restore the factory shine. My engineering background plays a role as well, studying the reactions and complements of different products and benchmarking their success to provide you, the customer, with the best all-around detailing process in Kentucky.</p>
   </section>
+
   <section id="expectations">
     <h3>What to Expect</h3>
     <p>I will arrive at a mutually agreed-upon location with all tools necessary to complete the job. I will require access to your water supply to perform the detailing services. Approximately 10 gallons of water will be used to complete the job, which results in around $0.03 of water usage. However, I will provide my own power source to ensure that all tools and equipment operate efficiently.</p>
   </section>
+
   <section id="reviews">
     <h3>Reviews</h3>
     <div class="loading-container" id="loadingContainer">
@@ -85,11 +149,13 @@
     </div>
     <div id="reviewsList"></div>
   </section>
+
   <section id="legal">
     <h3>Legal</h3>
     <p>By scheduling a service with ICONIC MOBILE DETAILS, you acknowledge and accept that all services are provided "as is." While we take the utmost care, ICONIC MOBILE DETAILS is not liable for any damage to vehicles during or after the service. The customer assumes all risks associated with the detailing process.</p>
     <p>Payment Policy: 50% upfront, 50% upon completion. If the vehicle's condition requires additional time beyond the estimated duration, an extra charge of $25 per 30 minutes will be applied. Veterans, First Responders, and Students will receive a 10% discount off the entire bill. If the service is canceled within 48 hours of the appointment, the 50% upfront charge will not be refunded; however, no additional charges will be applied. Canceling a booking outside of the 48-hour window will result in a full refund.</p>
   </section>
+
   <footer>
     <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
     <p>Hours of Operation: Mon–Fri 5:00 PM–6:00 PM; Sat–Sun 7:00 AM–5:00 PM</p>
