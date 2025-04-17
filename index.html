@@ -5,194 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ICONIC MOBILE DETAILS - Mobile Car Detailing Service</title>
   <style>
-    body {
-      font-family: 'Avenir Next LT Pro', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #000;
-      color: #fff;
-    }
-    header {
-      background-color: #000;
-      color: #fff;
-      padding: 2rem 0;
-      text-align: center;
-    }
-    header img {
-      width: 360px;
-      margin: 0 auto;
-      display: block;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      background-color: #111;
-      padding: 1rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 1.5rem;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-    nav a:hover {
-      text-decoration: underline;
-      color: #ffcc00;
-    }
-    nav a.active {
-      font-weight: bold;
-      text-decoration: underline;
-      color: #ffcc00;
-    }
-    section {
-      display: none;
-      max-width: 900px;
-      margin: 2rem auto;
-      background: #111;
-      padding: 2.5rem;
-      border-radius: 8px;
-      border: 2px solid #fff;
-      box-shadow: 0 3px 6px rgba(255, 255, 255, 0.1);
-    }
-    section.active {
-      display: block;
-    }
-    section h3 {
-      margin-top: 0;
-      font-size: 2rem;
-      color: #fff;
-    }
-    .review-form {
-      display: none;
-      background: #222;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-top: 1.5rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .review {
-      background: #222;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      border: 1px solid #fff;
-    }
-    .square-button {
-      background-color: #008cff;
-      color: white;
-      text-transform: uppercase;
-      font-family: 'Square Market', sans-serif;
-      letter-spacing: 1px;
-      line-height: 38px;
-      padding: 0 28px;
-      height: 40px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 14px;
-      cursor: pointer;
-      display: inline-block;
-      margin-top: 1rem;
-      text-decoration: none;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border: 1px solid #555;
-      border-radius: 4px;
-      background: #333;
-      color: #fff;
-    }
-    select:invalid {
-      color: #aaa;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator,
-    input[type="time"]::-webkit-calendar-picker-indicator {
-      filter: invert(80%) sepia(100%) saturate(200%) hue-rotate(10deg);
-      cursor: pointer;
-    }
-    footer {
-      background: #111;
-      color: #fff;
-      text-align: center;
-      padding: 1rem 0;
-      margin-top: 2rem;
-      border-top: 1px solid #fff;
-    }
-    footer a {
-      color: #ffcc00;
-      text-decoration: none;
-    }
-    footer a:hover {
-      text-decoration: underline;
-    }
+    body { font-family: 'Avenir Next LT Pro', Arial, sans-serif; margin: 0; padding: 0; background-color: #000; color: #fff; }
+    header { background-color: #000; color: #fff; padding: 2rem 0; text-align: center; }
+    header img { width: 360px; margin: 0 auto; display: block; }
+    nav { display: flex; justify-content: center; background-color: #111; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; }
+    nav a { color: #fff; text-decoration: none; margin: 0 1.5rem; font-size: 1.2rem; cursor: pointer; }
+    nav a:hover { text-decoration: underline; color: #ffcc00; }
+    nav a.active { font-weight: bold; text-decoration: underline; color: #ffcc00; }
+    section { display: none; max-width: 900px; margin: 2rem auto; background: #111; padding: 2.5rem; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 3px 6px rgba(255,255,255,0.1); }
+    section.active { display: block; }
+    section h3 { margin-top: 0; font-size: 2rem; color: #fff; }
+    .button { display:inline-block; background-color:#ffcc00; color:#000; padding:.8rem 1.5rem; text-decoration:none; font-weight:bold; border-radius:5px; margin-top:1rem; cursor:pointer; border:none; }
+    .button:hover { background-color:#ffa500; }
+    .square-button { background-color:#008cff; color:#fff; text-transform:uppercase; font-family:'Square Market',sans-serif; letter-spacing:1px; line-height:38px; padding:0 28px; height:40px; border:none; border-radius:8px; font-weight:500; font-size:14px; cursor:pointer; display:inline-block; margin-top:1rem; text-decoration:none; }
+    .review-form { display:none; background:#222; padding:1.5rem; border-radius:8px; margin-top:1.5rem; max-width:600px; margin:0 auto; }
+    .review { background:#222; padding:1rem; border-radius:8px; margin-top:1rem; border:1px solid #fff; }
+    /* loading animation */
+    .loading-container { position: relative; width: 200px; height: 200px; margin: 1rem auto; }
+    .track { width:100%; height:100%; border:5px dashed white; border-radius:50%; position:relative; }
+    .car { width:40px; height:40px; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(90deg) translateX(75px) rotate(270deg); transition:transform .1s linear; }
+    .car::before { content: "🏎️"; font-size:32px; display:block; }
+    .progress-percentage { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; }
+    .loading-text { text-align:center; margin-top:10px; font-size:14px; }
+    input, select, textarea { width:100%; padding:0.5rem; margin:0.5rem 0; border:1px solid #555; border-radius:4px; background:#333; color:#fff; }
+    footer { background:#111; color:#fff; text-align:center; padding:1rem 0; border-top:1px solid #fff; }
+    footer a { color:#ffcc00; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Navigation tabs
-      const tabs = document.querySelectorAll('nav a');
-      const sections = document.querySelectorAll('section');
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          const target = tab.getAttribute('href').substring(1);
-          sections.forEach(sec => sec.classList.remove('active'));
-          document.getElementById(target).classList.add('active');
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-        });
-      });
-      // Reviews functionality
-      document.getElementById('reviewButton').addEventListener('click', () => {
-        document.getElementById('reviewForm').style.display = 'block';
-      });
-      document.getElementById('submitReview').addEventListener('click', async () => {
-        const name = document.getElementById('reviewName').value;
-        const review = document.getElementById('reviewText').value;
-        if (name && review) {
-          await fetch('https://iconicmobiledetails-backend.onrender.com/reviews', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, review })
-          });
-          document.getElementById('reviewName').value = '';
-          document.getElementById('reviewText').value = '';
-          document.getElementById('reviewForm').style.display = 'none';
-          loadReviews();
-        }
-      });
-      async function loadReviews() {
-        const res = await fetch('https://iconicmobiledetails-backend.onrender.com/reviews');
-        const data = await res.json();
-        const list = document.getElementById('reviewsList');
-        list.innerHTML = '';
-        data.forEach(r => {
-          const div = document.createElement('div');
-          div.className = 'review';
-          div.innerHTML = `<strong>${r.name}</strong><p>${r.review}</p>`;
-          list.appendChild(div);
-        });
-      }
+      // Tabs
+      const tabs=document.querySelectorAll('nav a'), secs=document.querySelectorAll('section');
+      tabs.forEach(t=>t.addEventListener('click',()=>{ const id=t.getAttribute('href').slice(1); secs.forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active'); }));
+      // Reviews loading + functionality
+      const loadingContainer=document.getElementById('loadingContainer'), car=document.getElementById('car'), pct=document.getElementById('progressPercent'), txt=document.getElementById('loadingText');
+      function startAnimation(){ let prog=0; const iv=setInterval(()=>{ if(prog>=100){ clearInterval(iv); txt.innerText='Reviews loaded!'; return;} prog++; const ang=90+(prog/100)*360; car.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateX(75px) rotate(270deg)`; pct.innerText=prog+'%'; },50); }
+      async function loadReviews(){ loadingContainer.style.display='block'; document.getElementById('reviewsList').style.display='none'; startAnimation(); const res=await fetch('https://iconicmobiledetails-backend.onrender.com/reviews'); const data=await res.json(); const list=document.getElementById('reviewsList'); list.innerHTML=''; data.forEach(r=>{ const d=document.createElement('div'); d.className='review'; d.innerHTML=`<strong>${r.name}</strong><p>${r.review}</p>`; list.appendChild(d); }); loadingContainer.style.display='none'; list.style.display='block'; }
+      document.getElementById('reviewButton').addEventListener('click',()=>{ document.getElementById('reviewForm').style.display='block'; });
+      document.getElementById('submitReview').addEventListener('click',async()=>{ const n=document.getElementById('reviewName').value, r=document.getElementById('reviewText').value; if(n&&r){ await fetch('https://iconicmobiledetails-backend.onrender.com/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,review:r})}); document.getElementById('reviewName').value=''; document.getElementById('reviewText').value=''; document.getElementById('reviewForm').style.display='none'; setTimeout(loadReviews,200); }});
       loadReviews();
     });
   </script>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="ICONIC DETAILS Logo" />
-  </header>
+  <header><img src="logo.png" alt="ICONIC DETAILS Logo"/></header>
   <nav>
-    <a href="#services" class="active">Services</a>
-    <a href="#about">About</a>
-    <a href="#expectations">What to Expect</a>
-    <a href="#reviews">Reviews</a>
-    <a href="#legal">Legal</a>
+    <a href="#services" class="active">Services</a><a href="#about">About</a><a href="#expectations">What to Expect</a><a href="#reviews">Reviews</a><a href="#legal">Legal</a>
   </nav>
   <section id="services" class="active">
     <h3>Our Services</h3>
@@ -202,8 +60,7 @@
       <li><strong>Advanced Wash - $400:</strong> Experience premium detailing with Medium Wash services plus clay bar treatment and paint sealant for long-lasting shine. <em>Estimated Time: 6 Hours.</em></li>
       <li><strong>Showroom Wash - $1000:</strong> The ultimate detailing package. Includes Advanced Wash services plus ceramic coating and engine bay cleaning. Your car will look like it just rolled off the showroom floor. <em>Estimated Time: 8 Hours.</em></li>
     </ul>
-    <p><strong>Veterans, First Responders, and Students Discount:</strong> All mentioned receive an instant 10% off their entire bill.</p>
-    <!-- Square Appointments Embed -->
+    <p><strong>Discount:</strong> Veterans, First Responders, and Students receive a 10% off their entire bill.</p>
     <a href="https://app.squareup.com/appointments/book/1dpgfzaf84gw17/L1PEGW0Z12MMA/start" class="square-button" target="_top" rel="nofollow">Click Here to Book</a>
   </section>
   <section id="about">
@@ -216,7 +73,10 @@
   </section>
   <section id="reviews">
     <h3>Reviews</h3>
-    <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. They provide us with invaluable feedback and help future customers make informed decisions. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve. If you are not satisfied with your service, let us know! We want to continuously improve the work we do to better serve Kentucky.</p>
+    <div class="loading-container" id="loadingContainer">
+      <div class="track"><div class="car" id="car"></div><div class="progress-percentage" id="progressPercent">0%</div></div>
+      <div class="loading-text" id="loadingText">Loading reviews...</div>
+    </div>
     <button id="reviewButton" class="button">Leave us a Review</button>
     <div id="reviewForm" class="review-form">
       <input type="text" id="reviewName" placeholder="Your Name" required />
@@ -232,6 +92,7 @@
   </section>
   <footer>
     <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
+    <p>Hours of Operation: Mon–Fri 5:00 PM–6:00 PM; Sat–Sun 7:00 AM–5:00 PM</p>
     <p>Contact: cvomero@iconicmobiledetails.com</p>
   </footer>
 </body>
