@@ -66,7 +66,7 @@
       font-size: 2rem;
       color: #fff;
     }
-    .booking-form, .review-form {
+    .review-form {
       display: none;
       background: #222;
       padding: 1.5rem;
@@ -76,30 +76,31 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .button, .square-button {
-      display: inline-block;
-      font-family: 'Arial', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 500;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
+    .review {
+      background: #222;
+      padding: 1rem;
       border-radius: 8px;
-      height: 40px;
-      line-height: 38px;
-      padding: 0 28px;
       margin-top: 1rem;
+      border: 1px solid #fff;
     }
     .square-button {
       background-color: #008cff;
-      color: #fff;
+      color: white;
+      text-transform: uppercase;
+      font-family: 'Square Market', sans-serif;
+      letter-spacing: 1px;
+      line-height: 38px;
+      padding: 0 28px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 1rem;
+      text-decoration: none;
     }
-    .button {
-      background-color: #ffcc00;
-      color: #000;
-    }
-    .button:hover { background-color: #ffa500; }
     input, select, textarea {
       width: 100%;
       padding: 0.5rem;
@@ -109,40 +110,56 @@
       background: #333;
       color: #fff;
     }
+    select:invalid {
+      color: #aaa;
+    }
     input[type="date"]::-webkit-calendar-picker-indicator,
     input[type="time"]::-webkit-calendar-picker-indicator {
       filter: invert(80%) sepia(100%) saturate(200%) hue-rotate(10deg);
       cursor: pointer;
     }
-  </style>
-
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrknObLQYnc8reQsfs6Y4sTqXtoT1I3hI&libraries=places" async defer></script>
-  <script>
-    function initAutocomplete() {
-      const el = document.getElementById('location');
-      if (el) new google.maps.places.Autocomplete(el, {types:['geocode']});
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+      margin-top: 2rem;
+      border-top: 1px solid #fff;
     }
+    footer a {
+      color: #ffcc00;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
-      initAutocomplete();
+      // Navigation tabs
       const tabs = document.querySelectorAll('nav a');
-      const secs = document.querySelectorAll('section');
-      tabs.forEach(tab => tab.addEventListener('click', () => {
-        const id = tab.getAttribute('href').slice(1);
-        secs.forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-      }));
-      // Reviews
+      const sections = document.querySelectorAll('section');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('href').substring(1);
+          sections.forEach(sec => sec.classList.remove('active'));
+          document.getElementById(target).classList.add('active');
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+        });
+      });
+      // Reviews functionality
       document.getElementById('reviewButton').addEventListener('click', () => {
         document.getElementById('reviewForm').style.display = 'block';
       });
       document.getElementById('submitReview').addEventListener('click', async () => {
-        const n = document.getElementById('reviewName').value;
-        const r = document.getElementById('reviewText').value;
-        if (n && r) {
+        const name = document.getElementById('reviewName').value;
+        const review = document.getElementById('reviewText').value;
+        if (name && review) {
           await fetch('https://iconicmobiledetails-backend.onrender.com/reviews', {
-            method: 'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:n,review:r})
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, review })
           });
           document.getElementById('reviewName').value = '';
           document.getElementById('reviewText').value = '';
@@ -153,15 +170,23 @@
       async function loadReviews() {
         const res = await fetch('https://iconicmobiledetails-backend.onrender.com/reviews');
         const data = await res.json();
-        const rl = document.getElementById('reviewsList'); rl.innerHTML = '';
-        data.forEach(x => { const d = document.createElement('div'); d.className = 'review'; d.innerHTML =`<strong>${x.name}</strong><p>${x.review}</p>`; rl.appendChild(d); });
+        const list = document.getElementById('reviewsList');
+        list.innerHTML = '';
+        data.forEach(r => {
+          const div = document.createElement('div');
+          div.className = 'review';
+          div.innerHTML = `<strong>${r.name}</strong><p>${r.review}</p>`;
+          list.appendChild(div);
+        });
       }
       loadReviews();
     });
   </script>
 </head>
-<body onload="initAutocomplete()">
-  <header><img src="logo.png" alt="ICONIC DETAILS Logo"></header>
+<body>
+  <header>
+    <img src="logo.png" alt="ICONIC DETAILS Logo" />
+  </header>
   <nav>
     <a href="#services" class="active">Services</a>
     <a href="#about">About</a>
@@ -169,35 +194,45 @@
     <a href="#reviews">Reviews</a>
     <a href="#legal">Legal</a>
   </nav>
-
   <section id="services" class="active">
     <h3>Our Services</h3>
     <ul>
-      <li><strong>Entry Wash - $100:</strong> Perfect for a quick professional clean. (2 hrs.)</li>
-      <li><strong>Medium Wash - $200:</strong> Includes interior shampoo + dashboard detailing. (4 hrs.)</li>
-      <li><strong>Advanced Wash - $400:</strong> Clay bar + paint sealant. (6 hrs.)</li>
-      <li><strong>Showroom Wash - $1000:</strong> Ceramic coating + engine bay clean. (8 hrs.)</li>
+      <li><strong>Entry Wash - $100:</strong> Perfect for those seeking a quick yet professional clean. Includes exterior wash, tire shine, and basic interior vacuum. <em>Estimated Time: 2 Hours.</em></li>
+      <li><strong>Medium Wash - $200:</strong> Enjoy a more comprehensive clean with Entry Wash services plus interior shampoo and dashboard detailing. <em>Estimated Time: 4 Hours.</em></li>
+      <li><strong>Advanced Wash - $400:</strong> Experience premium detailing with Medium Wash services plus clay bar treatment and paint sealant for long-lasting shine. <em>Estimated Time: 6 Hours.</em></li>
+      <li><strong>Showroom Wash - $1000:</strong> The ultimate detailing package. Includes Advanced Wash services plus ceramic coating and engine bay cleaning. Your car will look like it just rolled off the showroom floor. <em>Estimated Time: 8 Hours.</em></li>
     </ul>
-    <p><strong>Discount:</strong> Veterans, First Responders, Students get 10% off.</p>
-
-    <!-- Replaced button with Square embed -->
-    <a href="https://app.squareup.com/appointments/book/1dpgfzaf84gw17/L1PEGW0Z12MMA/start"
-       class="square-button"
-       target="_top"
-       rel="nofollow">
-      Click Here to Book
-    </a>
-
-    <div class="booking-form" id="bookingForm">
-      <!-- booking fields omitted since Square link handles scheduling -->
-    </div>
+    <p><strong>Veterans, First Responders, and Students Discount:</strong> All mentioned receive an instant 10% off their entire bill.</p>
+    <!-- Square Appointments Embed -->
+    <a href="https://app.squareup.com/appointments/book/1dpgfzaf84gw17/L1PEGW0Z12MMA/start" class="square-button" target="_top" rel="nofollow">Click Here to Book</a>
   </section>
-
-  <!-- Other sections unchanged -->
-  <section id="about"><h3>About Us</h3>...</section>
-  <section id="expectations"><h3>What to Expect</h3>...</section>
-  <section id="reviews"><h3>Reviews</h3>...</section>
-  <section id="legal"><h3>Legal</h3>...</section>
-  <footer>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</footer>
+  <section id="about">
+    <h3>About Us</h3>
+    <p>I am an engineering graduate from the University of Kentucky who has always had an affinity for cars, particularly an obsession with how clean people could get their cars. I could not wait until the day I was 16 to get my first car and keep it clean. My hobby grew into a passion. Over the next 10 years, I researched the best products, practices, and techniques to preserve paint and restore the factory shine. My engineering background plays a role as well, studying the reactions and complements of different products and benchmarking their success to provide you, the customer, with the best all-around detailing process in Kentucky.</p>
+  </section>
+  <section id="expectations">
+    <h3>What to Expect</h3>
+    <p>I will arrive at a mutually agreed-upon location with all tools necessary to complete the job. I will require access to your water supply to perform the detailing services. Approximately 10 gallons of water will be used to complete the job, which results in around $0.03 of water usage. However, I will provide my own power source to ensure that all tools and equipment operate efficiently.</p>
+  </section>
+  <section id="reviews">
+    <h3>Reviews</h3>
+    <p>At ICONIC MOBILE DETAILS, we believe that reviews are the cornerstone of any successful business. They provide us with invaluable feedback and help future customers make informed decisions. Your opinion matters, and we strive to earn 5-star reviews from every customer we serve. If you are not satisfied with your service, let us know! We want to continuously improve the work we do to better serve Kentucky.</p>
+    <button id="reviewButton" class="button">Leave us a Review</button>
+    <div id="reviewForm" class="review-form">
+      <input type="text" id="reviewName" placeholder="Your Name" required />
+      <textarea id="reviewText" placeholder="Write your review here..." rows="4" required></textarea>
+      <button id="submitReview" class="button">Post Review</button>
+    </div>
+    <div id="reviewsList"></div>
+  </section>
+  <section id="legal">
+    <h3>Legal</h3>
+    <p>By scheduling a service with ICONIC MOBILE DETAILS, you acknowledge and accept that all services are provided "as is." While we take the utmost care, ICONIC MOBILE DETAILS is not liable for any damage to vehicles during or after the service. The customer assumes all risks associated with the detailing process.</p>
+    <p>Payment Policy: 50% upfront, 50% upon completion. If the vehicle's condition requires additional time beyond the estimated duration, an extra charge of $25 per 30 minutes will be applied. Veterans, First Responders, and Students will receive a 10% discount off the entire bill. If the service is canceled within 48 hours of the appointment, the 50% upfront charge will not be refunded; however, no additional charges will be applied. Canceling a booking outside of the 48-hour window will result in a full refund.</p>
+  </section>
+  <footer>
+    <p>&copy; 2025 ICONIC MOBILE DETAILS. All Rights Reserved.</p>
+    <p>Contact: cvomero@iconicmobiledetails.com</p>
+  </footer>
 </body>
 </html>
